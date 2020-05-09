@@ -16,16 +16,42 @@
               {% block sidebar %}
                   <ul class="sidebar-nav">
                       <li><a href="{% url 'catalog:index' %}">Home</a></li>
-                      <li><a href="{% url 'catalog:books' %}">All books</a></li>
-                      <li><a href="">All authors</a></li>
+                      <li><a href="{% url 'catalog:book-list' %}">All books</a></li>
+                      <li><a href="{% url 'catalog:author-list' %}">All authors</a></li>
                   </ul>
               {% endblock %}
           </div>
-          <div class="col-sm-10 ">
-              {% block content %}
 
-              {% endblock %}
-          </div>
+              <div class="col-sm-10 ">
+                  {% block content %}
+
+
+                  {% endblock %}
+
+              <!--The code below first checks if pagination is enabled on the currently viewed page(not this base.html)
+               dynamically. If so then it adds next and previous links as appropriate (and the current page number).
+               Pagination is a default attribute of LIST based class views, since I might have more than one list html
+               views for my library project, i added this here below to base so that it can extend to all LIST based
+               class uniformly-->
+                  {% block pagination %}
+                      {% if is_paginated %}
+                          <div class="pagination">
+                              <span class="page-links">
+                                  {% if page_obj.has_previous %}
+                                      <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+                                  {% endif %}
+                                  <span class="page-current">
+                                      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                                  </span>
+                                  {% if page_obj.has_next %}
+                                      <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+                                  {% endif %}
+                              </span>
+                          </div>
+                      {% endif %}
+                  {% endblock %}
+              </div>
+
       </div>
   </div>
 </body>

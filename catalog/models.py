@@ -49,19 +49,39 @@ class Book(models.Model):
     # A book can be written in one language, a Language can be used to write 0 or many books
     language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True)
 
+
     def display_genre(self):
         """Creates a string for the Genre. This is required to display genre in Admin."""
         return ', '.join([genre.name for genre in self.genre.all()[:3]])
 
     display_genre.short_description = 'Genre'
 
+    class Meta:
+        ordering = ['title']
+
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book."""
-        return reverse('book-detail', args=[str(self.id)])
 
+        # if there were no app_name set in app/urls.py, it would have been just 'book-detail'
+        return reverse('catalog:book-detail', args=[str(self.id)])
+
+
+# In a typical OneToManyRelationship (Foreign Key) like below, BookInstance is not declared as a field in Book,
+# so therefore BookInstance doesn't have any field to get the set of associated records.
+# To overcome this problem, Django constructs an appropriately named "reverse lookup" function that you can use.
+# The name of the function is constructed by lower-casing the model name where the ForeignKey was declared,
+# followed by _set (i.e. so the function created in Book is bookinstance_set()).
+
+# In the 'book_detail.html', book.bookinstance_set.all() was called to create an association as explained above.
+# Note: Here I use all() to get all records (the default), also beware that if you don't define an order
+# (on your class-based view or model), you will also see errors from the development server. That happens because
+# the paginator object expects to see some ORDER BY being executed on the underlying database.
+
+# Note: Always try to sort by an attribute/column that actually has an index (unique or not) on the database to
+# avoid performance issues.
 
 class BookInstance(models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
@@ -114,7 +134,7 @@ class Author(models.Model):
 
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""
-        return reverse('author-detail', args=[str(self.id)])
+        return reverse('catalog:author-detail', args=[str(self.id)])
 
     def __str__(self):
         return '{0}, {1}'.format(self.last_name, self.first_name)
