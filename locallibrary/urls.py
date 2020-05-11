@@ -70,19 +70,19 @@ urlpatterns = [
 
 # PASSWORD RESET TEMPLATES: The default password reset system uses email to send the user a reset link.
 # You need to create forms to get the user's email address, send the email, allow them to enter a new
-# password, and to note when the whole process is complete.
+# password, and to note when the whole process is complete. Below is the sequential step of the process:
 
-# Password Reset Form: This is the form used to get the user's email address (for sending the password reset email)
+# 1. Password Reset Form: This is the form used to get the user's email address (for sending the password reset email)
 # templates/registration/password_reset_form.html
 
-# Password Reset Done: This form is displayed after your email address has been collected.
+# 2. Password Reset Done: This form is displayed after your email address has been collected.
 # templates/registration/password_reset_done.html
 
-# Password Reset Email: This template provides the text of the HTML email containing the reset link that we will send
+# 3. Password Reset Email: This template provides the text of the HTML email containing the reset link that we will send
 # to users. /templates/registration/password_reset_email.html
 
-# Password Reset Confirm: This page is where you enter your new password after clicking the link in the password reset
-# email. /templates/registration/password_reset_confirm.html
+# 4. Password Reset Confirm: This page is where you enter your new password after clicking the link in the password
+# reset email. /templates/registration/password_reset_confirm.html
 
-# Password Reset Complete: This is the last password-reset template, which is displayed to notify you when the password
-# reset has succeeded. templates/registration/password_reset_complete.html
+# 5. Password Reset Complete: This is the last password-reset template, which is displayed to notify you when the
+# password reset has succeeded. templates/registration/password_reset_complete.html

@@ -125,3 +125,9 @@ STATIC_ROOT = (
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
+
+# Local test for email password reset, ensure you register an arbitrary email
+# when creating a superuser account for you to be able to see the email and
+# reset link on your console
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

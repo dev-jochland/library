@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>
+        Renew Date
+    </title>
+{% endblock %}
+
+{% block content %}
+    <h1>Renew: {{ book_instance.book.title }}</h1>
+    <p>Borrower: {{ book_instance.borrower }}</p>
+    <p{% if book_instance.is_overdue %} class="text-danger"{% endif %}>Due date: {{ book_instance.due_back }}</p>
+
+    <!--an empty action as shown below, means that the form data will be posted back to the current URL of the page
+    (which is what I want!).
+
+{#    Using {{ form.as_table }} as shown below, each field is rendered as a table row. You can also render each field#}
+{#    as a list item (using {{ form.as_ul }} ) or as a paragraph (using {{ form.as_p }}).#}
+
+    It is also possible to have complete control over the rendering of each part of the form, by indexing its
+    properties using dot notation.-->
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

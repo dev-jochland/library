@@ -47,7 +47,7 @@ class BookInstanceAdmin(admin.ModelAdmin):
     # To be able to filter which items are displayed based on that model specific field,
     # You do this by listing those fields in the list_filter attribute
     list_filter = ('status', 'due_back')
-    list_display = ('book', 'status', 'due_back', 'id')
+    list_display = ('book', 'status', 'borrower', 'due_back', 'id')
 
     # I added "sections" to group related model information within the detail form,
     # using the fieldsets attribute. Each section has its own title (or None, if you don't
@@ -57,7 +57,7 @@ class BookInstanceAdmin(admin.ModelAdmin):
             'fields': ('book', 'imprint', 'id')
         }),
         ('Availability', {
-            'fields': ('status', 'due_back')
+            'fields': ('status', 'due_back', 'borrower')
         }),
     )
 

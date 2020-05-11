@@ -19,6 +19,33 @@
                       <li><a href="{% url 'catalog:book-list' %}">All books</a></li>
                       <li><a href="{% url 'catalog:author-list' %}">All authors</a></li>
                   </ul>
+
+                   <ul class="sidebar-nav">
+                      {% if user.is_authenticated and user.is_authenticated != user.is_staff %}
+                          <li>User: {{ user.get_username }}</li>
+                          <li><a href="{% url 'catalog:my-borrowed' %}">My Borrowed</a></li>
+                          <li><a href="{% url 'logout' %}?next={{ request.path }}">Log Out</a></li>
+                      {% else %}
+                          {% if user.is_staff %}
+
+                          {% else %}
+                              <li>
+                                  <a href="{% url 'login' %}?next={{ request.path }}">Log In</a>
+                              </li>
+                          {%  endif %}
+                      {% endif %}
+                   </ul>
+
+                  {% if user.is_authenticated and user.is_staff %}
+                      <hr />
+                      <ul class="sidebar-nav">
+                          <li>Staff: {{ user.get_username }}</li>
+                          {% if perms.catalog.can_mark_returned %}
+                              <li><a href="{% url 'catalog:all-borrowed' %}">All borrowed</a></li>
+                          {% endif %}
+                          <li><a href="{% url 'logout' %}?next={{ request.path }}">Log Out</a></li>
+                      </ul>
+                  {% endif %}
               {% endblock %}
           </div>
 

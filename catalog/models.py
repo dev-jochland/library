@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 import uuid  # Required for unique book instances
 from datetime import date
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -109,6 +110,14 @@ class BookInstance(models.Model):
         default='m',
         help_text='Book Availability')
 
+    # The column below makes it possible for users to have a BookInstance
+    # on loan, this makes it possible for users to borrow books
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    # The @property decorator below, allow this function(is_overdue) to be called directly from templates
+    # Note: First verify whether due_back is empty before making a comparison. An empty due_back field
+    # would cause Django to throw an error instead of showing the page: empty values are not comparable.
+    # This is not something site users should experience!
     @property
     def is_overdue(self):
         if self.due_back and date.today() > self.due_back:
@@ -117,7 +126,24 @@ class BookInstance(models.Model):
 
     class Meta:
         ordering = ['due_back']
-        permissions = (("can_mark_returned", "Set book as returned"),)
+
+        # Permissions are associated with models and define the operations that
+        # can be performed on a model instance by a user who has the permission.
+        # By default, Django automatically gives add, change, and delete permissions
+        # to all models, which allow users with the permissions to perform the
+        # associated actions via the admin site. Testing on permissions in views and
+        # templates is then very similar for testing on the authentication status
+        # (and in fact, testing for a permission also tests for authentication).
+
+        # Defining permissions is done on the model "class Meta" section, using the
+        # permissions field. You can specify as many permissions as you need in a tuple,
+        # each permission itself being defined in a nested tuple containing the permission
+        # name and permission display value.
+
+        permissions = (
+            ("can_mark_returned", "Set book as returned"),
+            ("can_renew", "Renew date for books on loan"),
+        )
 
     def __str__(self):
         return '{0} ({1})'.format(self.id, self.book.title)
