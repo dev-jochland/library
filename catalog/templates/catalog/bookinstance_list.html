@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Book Copy</title>{% endblock %}
+
+{% block content %}
+    <h1>Copies of Individual Books in the Library</h1>
+    {% if bookinstance_list %}
+        <ul>
+            {% for bookinst in bookinstance_list %}
+                <li>
+                    <strong>{{ bookinst.book.title }} <br><span>Book Unique-ID: </span></strong> {{ bookinst.id }}
+                    {% if perms.catalog.can_mark_returned and bookinst.status == 'm' %}
+                        <a href="{% url 'catalog:bookinstance_update' bookinst.pk %}">
+                            <input type="button" value="Update">
+                        </a>
+
+                        <a href="{% url 'catalog:bookinstance_delete' bookinst.pk %}">
+                            <input type="button" value="Delete">
+                        </a>
+                         <br>
+                        <span class="text-danger"><em>This copy is currently on Maintenance</em></span>
+
+                    {% elif perms.catalog.can_mark_returned and bookinst.status == 'r' %}
+                        <a href="{% url 'catalog:bookinstance_update' bookinst.pk %}">
+                            <input type="button" value="Update">
+                        </a>
+
+                        <a href="{% url 'catalog:bookinstance_delete' bookinst.pk %}">
+                            <input type="button" value="Delete">
+                        </a>
+                         <br>
+                        <span class="text-primary"><em>This copy is currently on Reserved</em></span>
+
+
+                    {% elif perms.catalog.can_mark_returned and bookinst.status == 'a' %}
+                        <a href="{% url 'catalog:bookinstance_update' bookinst.pk %}">
+                            <input type="button" value="Update">
+                        </a>
+
+                        <a href="{% url 'catalog:bookinstance_delete' bookinst.pk %}">
+                            <input type="button" value="Delete">
+                        </a>
+                         <br>
+                        <span style="color: darkgoldenrod"><em>This copy is currently Available</em></span>
+
+                    {% else %}
+                        <span class="text-success"><em>This copy is currently on loan</em></span>
+
+
+                    {% endif %}
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no copies in the library.</p>
+    {% endif %}
+{% endblock %}

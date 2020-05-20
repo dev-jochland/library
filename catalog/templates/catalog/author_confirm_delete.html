@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Author Delete</title>
+{%  endblock %}
+
+
+{% block content %}
+    <h1>Delete Author</h1>
+    <p class="text-danger">Are you sure you want to delete the author: {{ author }}?</p>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Yes, delete.">
+    </form>
+
+{% endblock %}

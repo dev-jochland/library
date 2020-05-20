@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>
+        Borrow Request
+    </title>
+{% endblock %}
+
+{% block content %}
+    <h1>Borrow Request</h1>
+
+    {% if bookinstance_list %}
+        <ul>
+                {% for bookinst in bookinstance_list %}
+                    <li>
+                        {{bookinst.book.title}}
+                        <br>
+                        <a href="{% url 'catalog:copy_approve' bookinst.pk %}">Approve</a>
+                        <hr>
+                    </li>
+
+                {% endfor %}
+        </ul>
+
+    {% else %}
+        <p class="text-success">There are no borrow request currently.</p>
+    {% endif %}       
+{% endblock %}

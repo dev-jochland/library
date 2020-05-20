@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>BookInstance Delete</title>
+{%  endblock %}
+
+
+{% block content %}
+    <h1>Delete Copy of Book</h1>
+    <p class="text-danger">Are you sure you want to delete this book copy: {{ bookinstance }}?</p>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Yes, delete.">
+    </form>
+
+{% endblock %}

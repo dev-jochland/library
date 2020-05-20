@@ -1,0 +1,11 @@
+{% block title %}
+    <title>
+        Registration complete
+    </title>
+{% endblock %}
+
+{% block content %}
+    <p>
+        Thank you {{ user.first_name }} for completing the registration. <a href="{% url 'login' %}">Please login</a>
+    </p>
+{% endblock %}

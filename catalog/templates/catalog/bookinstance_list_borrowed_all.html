@@ -21,11 +21,17 @@
                     {% if user.is_staff %}
                         - {{ bookinst.borrower }}
                     {% endif %}
-                    {% if perms.catalog.can_renew %}
+                    <br>
+                    {% if perms.catalog.can_renew and perms.catalog.can_mark_returned %}
                         - <a href="{% url 'catalog:renew-book-librarian' bookinst.id %}">
                         Renew
                     </a>
+                        - <a href="{% url 'catalog:bookinstance_return' bookinst.id %}">
+                        Mark Return
+                    </a>
+                        <hr>
                     {% endif %}
+
                 </li>
             {% endfor %}
         </ul>

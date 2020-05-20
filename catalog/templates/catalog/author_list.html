@@ -21,7 +21,17 @@
                             )
                         {% endif %}
                     </a>
+                    {% if perms.catalog.can_mark_returned %}
+                        <a href="{% url 'catalog:author_update' author.pk %}">
+                            <input type="button" value="Update">
+                        </a>
+
+                        <a href="{% url 'catalog:author_delete' author.pk %}">
+                            <input type="button" value="Delete">
+                        </a>
+                    {% endif %}
                 </li>
+                <hr>
             {% endfor %}
         </ul>
     {% else %}

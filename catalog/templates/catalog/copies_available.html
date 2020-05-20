@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Available Copies</title>{% endblock %}
+
+{% block content %}
+    <h1>Currently available books in the library</h1>
+    {% if bookinstance_list %}
+        <ul>
+            {% for copies in bookinstance_list %}
+                <li>
+                    <a href="{% url 'catalog:book-detail' copies.book.pk %}">
+                        {{ copies.book.title }}
+                    </a>
+                    <br>
+                    ({{copies.id}})
+                    <a href="{% url 'catalog:borrow_request' copies.pk %}">Borrow</a>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no copies currently available to borrow in the library.</p>
+    {% endif %}
+{% endblock %}

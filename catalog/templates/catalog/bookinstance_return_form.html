@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>BookInstance Return</title>
+{%  endblock %}
+
+
+{% block content %}
+    <h3>Edit this book to Mark as Return</h3>
+    <p><strong>ID:</strong> {{ bookinstance.id }}</p>
+    <p><strong>Book:</strong> {{ bookinstance.book }}</p>
+    <p><strong>Imprint:</strong> {{ bookinstance.imprint }}</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

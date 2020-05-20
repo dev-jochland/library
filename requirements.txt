@@ -7,7 +7,9 @@ django-heroku==0.3.1
 gunicorn==20.0.4
 Pillow==7.0.0
 psycopg2==2.8.4
-pytz==2019.3 y
+pytz==2019.3
 sqlparse==0.3.1
 static3==0.7.0
 whitenoise==5.0.1
+django-widget-tweaks==1.4.8
+

@@ -2,15 +2,20 @@ from django.db import models
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 import uuid  # Required for unique book instances
 from datetime import date
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
-# Create your models here.
 class Genre(models.Model):
     """Model representing a book genre"""
     name = models.CharField(
         max_length=200,
         help_text='Enter a book genre (e.g. Science Fiction)')
+
+    # This is here to ensure a CreateView in views.py and on the html page has
+    # a redirect url on Create Submit Button click
+    def get_absolute_url(self):
+        """Returns the url to access list of Genres added."""
+        return reverse('catalog:genre_list')
 
     def __str__(self):
         return self.name
@@ -21,6 +26,12 @@ class Language(models.Model):
     name = models.CharField(
         max_length=100,
         help_text="Enter the book's natural language (e.g. English, French, Japanese etc.)")
+
+    # This is here to ensure a CreateView in views.py and on the html page has
+    # a redirect url on Create Submit Button click
+    def get_absolute_url(self):
+        """Returns the url to access list of added Languages."""
+        return reverse('catalog:language_list')
 
     def __str__(self):
         return self.name
@@ -38,17 +49,18 @@ class Book(models.Model):
 
     # 'Author' is in quotes here since the class is referenced here
     # before the creation, as python is a sequential language
-    author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey('Author', on_delete=models.CASCADE, null=True)
     summary = models.TextField(max_length=1000, help_text='Enter a brief description of the book')
     isbn = models.CharField('ISBN', max_length=13,
                             help_text='13 Character <a href="https://www.isbn-international.org/content/what-isbn'
                                       '">ISBN number</a>')
 
     # ManyToManyField used because genre can contain many books. Books can cover many genres
-    genre = models.ManyToManyField(Genre, help_text='Select a genre for this book')
+    genre = models.ManyToManyField(Genre, help_text='Select a genre for this book or press shift key '
+                                                    'and select more to select more than one Genre')
 
     # A book can be written in one language, a Language can be used to write 0 or many books
-    language = models.ForeignKey(Language, on_delete=models.SET_NULL, null=True)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True)
 
 
     def display_genre(self):
@@ -63,6 +75,8 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
+    # This is here to ensure a CreateView/UpdateView in views.py and on the html page has
+    # a redirect url on Create/Update Submit Button click
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book."""
 
@@ -92,7 +106,7 @@ class BookInstance(models.Model):
                           help_text='Unique ID for this particular book across whole library')
 
     # each book can have many copies, but a copy can only have one Book
-    book = models.ForeignKey(Book, on_delete=models.SET_NULL, null=True)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True)
     imprint = models.CharField(max_length=200)
     due_back = models.DateField(null=True, blank=True)
 
@@ -107,12 +121,12 @@ class BookInstance(models.Model):
         max_length=1,
         choices=LOAN_STATUS,
         blank=True,
-        default='m',
+        default='a',
         help_text='Book Availability')
 
     # The column below makes it possible for users to have a BookInstance
-    # on loan, this makes it possible for users to borrow books
-    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    # on loan, this makes it possible for users to borrow books more than one book
+    borrower = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     # The @property decorator below, allow this function(is_overdue) to be called directly from templates
     # Note: First verify whether due_back is empty before making a comparison. An empty due_back field
@@ -143,7 +157,12 @@ class BookInstance(models.Model):
         permissions = (
             ("can_mark_returned", "Set book as returned"),
             ("can_renew", "Renew date for books on loan"),
+            ("can_borrow", "Users can make a borrow request"),
         )
+
+    def get_absolute_url(self):
+        """Returns the url to access a particular author instance."""
+        return reverse('catalog:bookinstance_list')
 
     def __str__(self):
         return '{0} ({1})'.format(self.id, self.book.title)
@@ -158,6 +177,8 @@ class Author(models.Model):
     class Meta:
         ordering = ['last_name', 'first_name']
 
+    # This is here to ensure a CreateView/UpdateView in views.py and on the html page has
+    # a redirect url on Create/Update Submit Button
     def get_absolute_url(self):
         """Returns the url to access a particular author instance."""
         return reverse('catalog:author-detail', args=[str(self.id)])

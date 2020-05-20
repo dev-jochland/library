@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Genre List</title>{% endblock %}
+
+{% block content %}
+    <h1>Genre List</h1>
+    {% if genre_list %}
+        <ul>
+            {% for genre in genre_list %}
+                <li>
+                    {{ genre.name }}
+                    <a href="{% url 'catalog:genre_delete' genre.pk %}">
+                            <input type="button" value="Delete">
+                    </a>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no genres in the library.</p>
+    {% endif %}
+{% endblock %}

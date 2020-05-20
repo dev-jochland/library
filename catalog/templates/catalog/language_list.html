@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Language List</title>{% endblock %}
+
+{% block content %}
+    <h1>Language List</h1>
+    {% if language_list %}
+        <ul>
+            {% for language in language_list %}
+                <li>
+                    {{ language.name }}
+                    <a href="{% url 'catalog:language_delete' language.pk %}">
+                            <input type="button" value="Delete">
+                    </a>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no language in the library.</p>
+    {% endif %}
+{% endblock %}

@@ -48,6 +48,7 @@ class BookInstanceAdmin(admin.ModelAdmin):
     # You do this by listing those fields in the list_filter attribute
     list_filter = ('status', 'due_back')
     list_display = ('book', 'status', 'borrower', 'due_back', 'id')
+    readonly_fields = ('id', )
 
     # I added "sections" to group related model information within the detail form,
     # using the fieldsets attribute. Each section has its own title (or None, if you don't
