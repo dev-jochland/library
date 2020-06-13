@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}
+    <title>Search</title>
+{% endblock %}
+
+{% block content %}
+    <div class='col-12 col-md-6 mx-auto my-5 py-5'>
+
+            <form method='GET' class='' action='{% url 'catalog:search' %}'>
+                <div class="input-group form-group-no-border mx-auto" style="margin-bottom: 0px; font-size: 12px;">
+                    <span class="" style='color:#000'>
+                        <i classinput-group-addon cfe-nav="fa fa-search" aria-hidden="true"></i>
+                    </span>
+                    <input type="text" name="q" data-toggle="popover"
+                           data-placement="bottom" data-content="Press enter to search"
+                           class="form-control cfe-nav mt-0 py-3" placeholder="Search for books here" value=""
+                           style="" data-original-title="" title="" autofocus="autofocus">
+                </div>
+                <div>
+                    <button class="badge-secondary" type="submit" value="Search">Search</button>
+                </div>
+            </form>
+        </div>
+    {% if book_list %}
+    {% for book in book_list %}
+        <div class='row'>
+            <div class='col-12'>
+                <ul>
+                    <li>
+                        <a href='{{ book.get_absolute_url }}'>{{ book.title }}</a>
+                        <p>{{ book.summary|truncatechars:100 }}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    {% endfor %}
+    {% else %}
+        <p class="text-muted"><em>No such book exist currently in the library</em></p>
+    {% endif %}
+{% endblock %}

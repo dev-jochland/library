@@ -1,17 +1,16 @@
 from django.contrib import admin
 from .models import Author, Book, BookInstance, Genre, Language
 
-
 # Register your models here.
 
 # admin.site.register(Author)
 # admin.site.register(Book)
 # admin.site.register(BookInstance)
-# admin.site.register(Genre)
-# admin.site.register(Language)
+admin.site.register(Genre)
+admin.site.register(Language)
+
 
 # Define the Admin Class
-
 @admin.register(Author)  # Does the same thing as admin.site.register() syntax
 class AuthorAdmin(admin.ModelAdmin):
     # if you want to show more interesting information about each author, you
@@ -48,7 +47,7 @@ class BookInstanceAdmin(admin.ModelAdmin):
     # You do this by listing those fields in the list_filter attribute
     list_filter = ('status', 'due_back')
     list_display = ('book', 'status', 'borrower', 'due_back', 'id')
-    readonly_fields = ('id', )
+    readonly_fields = ('id',)
 
     # I added "sections" to group related model information within the detail form,
     # using the fieldsets attribute. Each section has its own title (or None, if you don't
@@ -65,16 +64,6 @@ class BookInstanceAdmin(admin.ModelAdmin):
 
 # Both models below only have one field, so no need to work on the display
 # except to register the model only as done below
-
-
-@admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(Language)
-class LanguageAdmin(admin.ModelAdmin):
-    pass
 
 
 # it may make sense to have both the book information and information about the

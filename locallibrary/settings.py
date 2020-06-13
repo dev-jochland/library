@@ -58,8 +58,7 @@ ROOT_URLCONF = 'locallibrary.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,7 +120,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = (
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'staticfiles')
+)
+STATICFILES_DIR = (
+    os.path.join(BASE_DIR, 'catalog/static')
 )
 
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
@@ -131,6 +133,7 @@ LOGIN_REDIRECT_URL = '/'
 # when creating a superuser account for you to be able to see the email and
 # reset link on your console
 
+# Console Email Test
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 

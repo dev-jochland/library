@@ -8,7 +8,7 @@
 
 {% block content %}
     <p>
-        We've emailed instructions to your registered email address with us, for confirming your email.
-        If they haven't arrived in a few minutes, check your spam folder. Thank you.
+        Hi {{ user.first_name }}, we've emailed instructions for confirming your email to your registered email address
+        ({{ user.email }}) with us. If they haven't arrived in a few minutes, do check your spam folder. Thank you.
     </p>
 {% endblock %}

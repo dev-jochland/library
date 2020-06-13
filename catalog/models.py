@@ -1,8 +1,12 @@
+import datetime
+
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse  # Used to generate URLs by reversing the URL patterns
 import uuid  # Required for unique book instances
 from datetime import date
 from django.contrib.auth.models import User, Group
+from django.utils import timezone
 
 
 class Genre(models.Model):
@@ -37,6 +41,18 @@ class Language(models.Model):
         return self.name
 
 
+class BookManager(models.Manager):
+    """This model handles every search query for the Book Model"""
+    def search(self, query=None):
+        qs = self.get_queryset()
+        if query is not None:
+            or_lookup = (Q(title__icontains=query) |
+                         Q(author__icontains=query)
+                         )
+            qs = qs.filter(or_lookup).distinct()
+        return qs
+
+
 class Book(models.Model):
     """Model representing a book (but not a specific copy of a book)."""
     title = models.CharField(max_length=200)
@@ -62,9 +78,11 @@ class Book(models.Model):
     # A book can be written in one language, a Language can be used to write 0 or many books
     language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True)
 
+    objects = BookManager()
 
     def display_genre(self):
-        """Creates a string for the Genre. This is required to display genre in Admin."""
+        """Creates a string for the Genre. This is required to display genre in Admin.
+        Because Genre is a Many to Many Field"""
         return ', '.join([genre.name for genre in self.genre.all()[:3]])
 
     display_genre.short_description = 'Genre'
@@ -97,6 +115,7 @@ class Book(models.Model):
 
 # Note: Always try to sort by an attribute/column that actually has an index (unique or not) on the database to
 # avoid performance issues.
+
 
 class BookInstance(models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
@@ -168,11 +187,25 @@ class BookInstance(models.Model):
         return '{0} ({1})'.format(self.id, self.book.title)
 
 
+class AuthorManager(models.Manager):
+    """This model handles every search query for the Author Model"""
+    def search(self, query=None):
+        qs = self.get_queryset()
+        if query is not None:
+            or_lookup = (Q(first_name__icontains=query) |
+                         Q(last_name__icontains=query)
+                         )
+            qs = qs.filter(or_lookup).distinct()
+        return qs
+
+
 class Author(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    date_of_birth = models.DateField(null=True, blank=True)
-    date_of_death = models.DateField('Died', null=True, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True, help_text='yyyy-mm-dd')
+    date_of_death = models.DateField('died', null=True, blank=True)
+
+    objects = AuthorManager()
 
     class Meta:
         ordering = ['last_name', 'first_name']
