@@ -67,6 +67,11 @@ class LibrarianRenewBookModelFormTest(SimpleTestCase):
         form = LibrarianRenewBookModelForm()
         self.assertEquals(list(form.base_fields), available_fields)
 
+    # def test_librarian_due_back_empty_input_error(self):
+    #     form = LibrarianRenewBookModelForm(data={'due_back': None})
+    #     self.assertFalse(form.is_valid())
+    #     self.assertTrue('due_back') in form.errors # show that field due_back is the cause for this error
+
 
 class UserBorrowBookModelFormTest(SimpleTestCase):
     def test_user_borrow_form_due_back_label_is_return_date(self):

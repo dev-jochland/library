@@ -15,6 +15,11 @@ class Genre(models.Model):
         max_length=200,
         help_text='Enter a book genre (e.g. Science Fiction)')
 
+    # ordering is needed to avoid the "UnorderedObjectListWarning: Pagination may yield inconsistent results with
+    # an unordered object_list" error on Pagination in a ListView.
+    class Meta:
+        ordering = ['name', ]
+
     # This is here to ensure a CreateView in views.py and on the html page has
     # a redirect url on Create Submit Button click
     def get_absolute_url(self):
@@ -26,10 +31,12 @@ class Genre(models.Model):
 
 
 class Language(models.Model):
-    """String for representing the Model object (in Admin site etc.)"""
     name = models.CharField(
         max_length=100,
         help_text="Enter the book's natural language (e.g. English, French, Japanese etc.)")
+
+    class Meta:
+        ordering = ['name', ]
 
     # This is here to ensure a CreateView in views.py and on the html page has
     # a redirect url on Create Submit Button click
