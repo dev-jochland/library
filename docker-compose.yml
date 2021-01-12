@@ -1,0 +1,54 @@
+# version of docker that we would be using
+version: '3.7'
+volumes:
+  db_data:
+  staticfiles:
+  media:
+
+# Specify the services
+services:
+  web:
+    container_name: library_app
+    build:
+      # Root directory where the Docker-Compose is located
+      context: .
+      dockerfile: ./docker/local/Dockerfile
+    # port mapping from our local machine to the docker container
+    ports:
+      - "8005:8005"
+    # Maps our django project app to the app directory in the docker container, and this allow us to make
+    # changes in the docker container real time locally without having to build always. This is convenient for local
+    # development only
+    volumes:
+      - ./locallibrary:/app
+      - staticfiles:/staticfiles
+      - media:/media
+
+    # Add env_files
+    env_file:
+      - ./.envs/.postgres
+      - ./.envs/.gmail
+      - ./.envs/.django
+      - ./.envs/.env_docker
+
+    expose:
+      - 8005
+    # not env postgres but postgres service declared further down below
+    depends_on:
+      - db
+  # not using entrypoint at this stage since it is still the local development, use entry point script in production
+  # 0.0.0.0 accepts any ip address with the 8005 port number specified below
+    command: sh -c "python manage.py runserver 0.0.0.0:8005"
+  # Setting up postgres db server
+  db:
+    image: postgres:latest
+    container_name: postgres_database
+    restart: always
+#    expose:
+#      - 5432
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    env_file:
+      - ./.envs/.postgres

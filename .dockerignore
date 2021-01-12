@@ -1,0 +1,9 @@
+.git
+*.idea
+.envs
+.gitignore
+locallibrary/venv
+locallibrary/.env
+locallibrary/media
+locallibrary/staticfiles
+locallibrary/catalog/static

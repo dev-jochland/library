@@ -1,0 +1,27 @@
+# version of docker that we would be using
+version: '3.7'
+volumes:
+  db_data:
+  staticfiles:
+  media:
+
+# Specify the services
+services:
+  web:
+    build:
+      # Root directory where the Dockerfile is located
+      context: .
+    # port mapping from our local machine to the docker container
+    ports:
+    - "8000:8000"
+    # Maps our django project app to the app directory in the docker container, and this allow us to make
+    # changes in the docker container real time locally without having to build always. This is convenient for local development only
+    volumes:
+    - ./locallibrary:/app
+    -
+    # not using entrypoint at this stage since it is still the local development, use entry point script in production
+    command: sh -c "python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - ./.envs/.django
+      - ./.envs/.gmail
+      - ./.envs/.postgres

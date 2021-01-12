@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Book List</title>{% endblock %}
+
+{% block content %}
+        <div class='col-12 col-md-6 mx-auto my-5 py-5'>
+
+            <form method='GET' class='' action='{% url 'catalog:search' %}'>
+                    <input type="text" name="q" data-toggle="popover"
+                           data-placement="bottom" data-content="Press enter to search"
+                           class="form-control cfe-nav mt-0 py-3" placeholder="Search for books here" value=""
+                           style="" data-original-title="" title="" autofocus="autofocus">
+                <div>
+                    <button class="badge-secondary" type="submit" value="Search">Search</button>
+                </div>
+            </form>
+        </div>
+    <h1>Book List</h1>
+    {% if list_of_books %}
+        <ul>
+            {% for book in list_of_books %}
+                <li>
+                    <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author}})
+                    {% if perms.catalog.can_mark_returned %}
+                        <a href="{% url 'catalog:book_update' book.pk %}">
+                            <input type="button" value="Update">
+                        </a>
+
+                        <a href="{% url 'catalog:book_delete' book.pk %}">
+                            <input type="button" value="Delete">
+                        </a>
+                    {% endif %}
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no books in the library.</p>
+    {% endif %}
+
+{% endblock %}
